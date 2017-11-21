@@ -24,15 +24,23 @@ stdenv.mkDerivation {
   buildPhase = ''
     eval $shellHook
     cat >"$out" <<EOF
-    extra-lib-dirs: ''${cabalExtraLibDirs[@]}
-    extra-include-dirs: ''${cabalExtraIncludeDirs[@]}
-
     program-locations
-      ar-location: $(type -P ar)
-      gcc-location: $(type -P gcc)
-      ld-location: $(type -P ld)
-      strip-location: $(type -P strip)
-      tar-location: $(type -P tar)
+      ar-location: $(command -v ar)
+      gcc-location: $(command -v gcc)
+      ld-location: $(command -v ld)
+      strip-location: $(command -v strip)
+      tar-location: $(command -v tar)
+
     EOF
+
+    for dir in ''${cabalExtraLibDirs[@]}
+    do
+        echo "extra-lib-dirs: $dir" >>"$out"
+    done
+
+    for dir in ''${cabalExtraIncludeDirs[@]}
+    do
+        echo "extra-include-dirs: $dir" >>"$out"
+    done
   '';
-};
+}
