@@ -3,12 +3,12 @@
 with nixpkgs;
 with pkgs;
 
-{ inputs ? [] }:
+{ inputs ? (pkgs: []) }:
 
 stdenv.mkDerivation {
   name = "cabal.config";
   phases = "buildPhase";
-  buildInputs = inputs;
+  buildInputs = [ gcc zlib ] ++ (inputs pkgs);
   preHook = ''
     declare -a cabalExtraLibDirs cabalExtraIncludeDirs
     cabalConfigLocalEnvHook() {
