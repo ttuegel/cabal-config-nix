@@ -46,7 +46,7 @@ stdenv.mkDerivation {
       haddock-location: $(command -v haddock)
       happy-location: $(command -v happy)
       hsc2hs-location: $(command -v hsc2hs)
-      hscolour-location: $(command -v hscolour)
+      hscolour-location: $(command -v HsColour)
       ld-location: $(command -v ld)
       pkg-config-location: $(command -v pkg-config)
       strip-location: $(command -v strip)
