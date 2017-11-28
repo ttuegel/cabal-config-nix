@@ -12,15 +12,23 @@ with pkgs;
   hscolour ? (pkgs: pkgs.haskellPackages.hscolour),
 }:
 
+let
+  buildInputs =
+    [
+      zlib (alex pkgs) (c2hs pkgs) (ghc pkgs) (happy pkgs) (hscolour pkgs)
+    ]
+    ++ (inputs pkgs);
+  pkgconfigWrapper =
+    import ./pkg-config-wrapper.nix { inherit stdenv makeWrapper pkgconfig; } {
+      inherit buildInputs;
+    };
+in
+
 stdenv.mkDerivation {
   name = "cabal.config";
   phases = "buildPhase";
-  buildInputs =
-    [
-      gcc pkgconfig zlib
-      (alex pkgs) (c2hs pkgs) (ghc pkgs) (happy pkgs) (hscolour pkgs)
-    ]
-    ++ (inputs pkgs);
+  nativeBuildInputs = [ gcc pkgconfigWrapper ];
+  inherit buildInputs;
   preHook = ''
     declare -a cabalExtraLibDirs cabalExtraIncludeDirs
     cabalConfigLocalEnvHook() {
